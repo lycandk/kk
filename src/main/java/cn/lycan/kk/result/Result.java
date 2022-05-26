@@ -1,6 +1,8 @@
 package cn.lycan.kk.result;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Makkapakka
@@ -9,10 +11,8 @@ import lombok.Data;
  * @description
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Result {
     int code;
-
-    public Result(int code) {
-        this.code = code;
-    }
 }

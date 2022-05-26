@@ -1,6 +1,13 @@
 package cn.lycan.kk.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Makkapakka
@@ -9,8 +16,9 @@ import lombok.Data;
  * @description
  */
 @Data
+@Component
 public class User {
-    String id;
+    private Integer id;
     String username;
     String password;
 }

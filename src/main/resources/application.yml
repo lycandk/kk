@@ -36,6 +36,10 @@ thymeleaf:
   mode: html5
   servlet:
     content-type: text/html
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 ## 应用名称
 #spring.application.name=kk
 #
