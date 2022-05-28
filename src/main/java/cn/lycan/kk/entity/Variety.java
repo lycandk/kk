@@ -5,14 +5,13 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Makkapakka
- * @date 2022-5-26
+ * @date 2022-5-27
  * @package_name cn.lycan.kk.entity
- * @description
+ * @description 品种分类实体类
  */
 @Data
 @Component
-public class User {
-    String username;
-    String password;
-    private Integer id;
+public class Variety {
+    int id;
+    String name;
 }

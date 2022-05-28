@@ -2,8 +2,6 @@ package cn.lycan.kk.service;
 
 import cn.lycan.kk.entity.User;
 import cn.lycan.kk.mapper.UserMapper;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Log4j2
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class UserService {
     @Autowired
     UserMapper userMapper;
@@ -30,27 +28,26 @@ public class UserService {
     }
 
     public User getByName(String username) {
-        log.info("根据用户名获取用户："+username);
+        log.info("根据用户名获取用户：" + username);
         return userMapper.findByUsername(username);
     }
 
-    public User get(String username, String password){
-        log.info("根据用户名以及密码获取用户："+username+" , "+password);
-        return userMapper.getByUsernameAndPassword(username,password);
+    public User get(String username, String password) {
+        log.info("根据用户名以及密码获取用户：" + username + " , " + password);
+        return userMapper.getByUsernameAndPassword(username, password);
     }
 
     public void add(User user) {
         int id = user.getId();
         String username = user.getUsername();
         String password = user.getPassword();
-        if(null==userMapper.getByUsernameAndPassword(username,password)){
-             userMapper.insertUser(username,password);
-             log.info("插入用户："+user);
+        if (null == userMapper.getByUsernameAndPassword(username, password)) {
+            userMapper.insertUser(username, password);
+            log.info("插入用户：" + user);
 
-        }
-        else {
+        } else {
             userMapper.updateUser(username, password);
-            log.info("更新用户："+user);
+            log.info("更新用户：" + user);
         }
     }
 
