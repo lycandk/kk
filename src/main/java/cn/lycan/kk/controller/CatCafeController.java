@@ -49,4 +49,13 @@ public class CatCafeController {
             return catService.listByVariety(vid);
         }
     }
+
+    @GetMapping("/api/search")
+    public List<Cat> searchCats(@RequestParam("keyword") String keyword) {
+        if ("".equals(keyword)) {
+            return catService.catList();
+        } else {
+            return catService.findAllByNameLikeOrVarietyLike(keyword);
+        }
+    }
 }

@@ -59,8 +59,8 @@ public interface CatMapper {
      *
      * @param cat
      */
-    @Insert("INSERT INTO cat SET (cover,variety,scientificname,latinname,placeoforigin,color,birthdate,abs,vid)" +
-            "VALUES (#{cover},#{variety},#{scientificname},#{latinname},#{placeoforigin},#{color},#{birthdate}," +
+    @Insert("INSERT INTO cat (cover,nickname,variety,scientificname,latinname,placeoforigin,color,birthdate,abs,vid)" +
+            "VALUES (#{cover},#{nickname},#{variety},#{scientificname},#{latinname},#{placeoforigin},#{color},#{birthdate}," +
             "#{abs},#{varieties.id})")
     void add(Cat cat);
 
@@ -70,7 +70,7 @@ public interface CatMapper {
      *
      * @param cat
      */
-    @Update("UPDATE cat SET cover=#{cover},variety=#{variety},scientificname=#{scientificname},latinname=#{latinname}," +
+    @Update("UPDATE cat SET cover=#{cover},nickname=#{nickname},variety=#{variety},scientificname=#{scientificname},latinname=#{latinname}," +
             "placeoforigin=#{placeoforigin},color=#{color},birthdate=#{birthdate},abs=#{abs},vid=#{varieties.id} WHERE id = #{id}")
     void update(Cat cat);
 

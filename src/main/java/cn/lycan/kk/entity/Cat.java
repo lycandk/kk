@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class Cat {
     int id;
     String cover;
+    String nickname;
     String variety;
     private Variety varieties;
     String scientificname;
