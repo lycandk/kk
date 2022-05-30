@@ -33,6 +33,7 @@ public interface CatMapper {
      * @return
      */
     @Select("SELECT * FROM cat WHERE nickname LIKE #{keyword} OR variety LIKE #{keyword}")
+    @Result(column = "vid", property = "varieties", javaType = Variety.class, one = @One(select = "cn.lycan.kk.mapper.VarietyMapper.findById"))
     List<Cat> findAllByNameLikeOrVarietyLike(String keyword);
 
     /**
