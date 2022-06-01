@@ -10,10 +10,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 /**
@@ -87,5 +84,14 @@ public class LoginController {
 //
 //        //返回结果封装
 //        return ResultFactory.buildSuccessResult(user);
+    }
+    @GetMapping("api/logout")
+    public Result logout(){
+        Subject subject = SecurityUtils.getSubject();
+        //logout方法由DelegatingSubject实现Subject接口后实现该方法，
+        // 该方法会清除 session、principals，并把 authenticated 设置为 false。
+        subject.logout();
+        String message = "成功登出";
+        return ResultFactory.buildSuccessResult(message);
     }
 }
