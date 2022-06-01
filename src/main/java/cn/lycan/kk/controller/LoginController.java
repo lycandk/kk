@@ -5,6 +5,10 @@ import cn.lycan.kk.result.Result;
 import cn.lycan.kk.result.ResultFactory;
 import cn.lycan.kk.service.UserService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,15 +35,15 @@ public class LoginController {
         // 对 html 标签进行转义，防止 XSS 攻击
         String username = user.getUsername();
         username = HtmlUtils.htmlEscape(username);
+        Subject subject = SecurityUtils.getSubject();
 
-
-        if (null == userService.get(username, user.getPassword())) {
-            String message = "用户名密码错误！";
-            log.error(message);
-            return new Result(400);
-        } else {
-            log.info("登陆成功！");
-            return new Result(200);
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,user.getPassword());
+        try{
+            subject.login(usernamePasswordToken);
+            return ResultFactory.buildSuccessResult(username);
+        }catch (AuthenticationException e){
+            String message = "账户或密码错误！";
+            return ResultFactory.buildFailureResult(message);
         }
     }
 
@@ -69,7 +73,7 @@ public class LoginController {
                 return ResultFactory.buildFailureResult("用户名已存在");
         }
         return ResultFactory.buildFailureResult("未知错误！");
-//        //生成随机盐，16位,调用的是shrio的生成随机数方法，先生成了随机的 byte 数组，又转换成了字符串类型的 base64 编码并返回。
+//        //生成随机盐，16位,调用的是shiro的生成随机数方法，先生成了随机的 byte 数组，又转换成了字符串类型的 base64 编码并返回。
 //        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
 //        //hash迭代次数
 //        int times = 2;
