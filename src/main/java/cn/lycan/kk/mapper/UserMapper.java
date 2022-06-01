@@ -39,17 +39,20 @@ public interface UserMapper {
      *
      * @param username
      * @param password
+     * @param salt
      * @return
      */
-    @Update("UPDATE user SET ")
-    User updateUser(@Param("username") String username, @Param("password") String password);
+    @Update("UPDATE user SET username = #{username}, password = #{password}, salt = #{salt}")
+    int updateUser(@Param("username") String username, @Param("password") String password, @Param("salt") String salt);
 
     /**
      * 插入用户
      *
      * @param username
      * @param password
+     * @param salt
+     * @return
      */
-    @Insert("INSERT INTO user (username,password) VALUES (#{username},#{password})")
-    void insertUser(@Param("username") String username, @Param("password") String password);
+    @Insert("INSERT INTO user (username,password,salt) VALUES (#{username},#{password},#{salt})")
+    int insertUser(@Param("username") String username, @Param("password") String password, @Param("salt") String salt);
 }

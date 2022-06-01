@@ -67,18 +67,19 @@ public class CatCafeController {
     /**
      * 涉及到对文件的操作，对接收到的文件重命名，但保留原始的格式。可以进一步做一下压缩，或者校验前端传来的数据是否为指定格式，这里不再赘述。
      */
-    public String coversUpload(MultipartFile file) throws Exception{
+    public String coversUpload(MultipartFile file) throws Exception {
         String folder = "d:/Software/webpfojects/kittykitty/kk/src/main/resources/workspace/image";
         File imageFolder = new File(folder);
-        File f = new File(imageFolder, StringUtils.getRandomString(6)+file.getOriginalFilename()
-                .substring(file.getOriginalFilename().length()-4));
-        if(!f.getParentFile().exists()){
+        File f = new File(imageFolder, StringUtils.getRandomString(6) + file.getOriginalFilename()
+                .substring(file.getOriginalFilename().length() - 4));
+        if (!f.getParentFile().exists()) {
             f.getParentFile().mkdirs();
-        }try{
+        }
+        try {
             file.transferTo(f);
             String imageUrl = "http://localhost:8443/api/file/" + f.getName();
             return imageUrl;
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return "";
         }

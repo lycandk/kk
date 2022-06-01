@@ -13,14 +13,15 @@ import java.util.Random;
 public class StringUtils {
     /**
      * 编写生成指定长度（长度为参数length的长度）随机字符串的方法
+     *
      * @param length
      * @return
      */
-    public static String getRandomString(int length){
+    public static String getRandomString(int length) {
         String base = "abcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
         StringBuffer stringBuffer = new StringBuffer();
-        for(int i = 0;i<length;i++){
+        for (int i = 0; i < length; i++) {
             int number = random.nextInt(base.length());
             stringBuffer.append(base.charAt(number));
         }

@@ -75,9 +75,9 @@ public class CatService {
 
     public List<Cat> listByVariety(int vid) {
         Variety variety = varietyService.getById(vid);
-        log.info("根据vid："+vid+"查询相关猫咪");
+        log.info("根据vid：" + vid + "查询相关猫咪");
         if (null == variety) {
-            log.error("没有该id对应的品种：" +vid+"--"+variety + "，查询所有cat");
+            log.error("没有该id对应的品种：" + vid + "--" + variety + "，查询所有cat");
             return catMapper.findAll(sort);
         } else {
             log.info("根据：" + variety + "查询cat");
@@ -85,8 +85,8 @@ public class CatService {
         }
     }
 
-    public List<Cat> findAllByNameLikeOrVarietyLike(String keyword){
-        log.info("根据关键词："+keyword+"查找相关猫咪");
+    public List<Cat> findAllByNameLikeOrVarietyLike(String keyword) {
+        log.info("根据关键词：" + keyword + "查找相关猫咪");
         return catMapper.findAllByNameLikeOrVarietyLike(keyword);
     }
 

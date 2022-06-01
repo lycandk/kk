@@ -16,13 +16,13 @@ public class Cat {
     String cover;
     String nickname;
     String variety;
-    private Variety varieties;
     String scientificname;
     String latinname;
     String placeoforigin;
     String color;
     String birthdate;
     String abs;
+    private Variety varieties;
 
 
 }

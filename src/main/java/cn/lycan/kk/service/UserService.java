@@ -3,9 +3,12 @@ package cn.lycan.kk.service;
 import cn.lycan.kk.entity.User;
 import cn.lycan.kk.mapper.UserMapper;
 import lombok.extern.log4j.Log4j2;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 /**
  * @author Makkapakka
@@ -37,18 +40,37 @@ public class UserService {
         return userMapper.getByUsernameAndPassword(username, password);
     }
 
-    public void add(User user) {
-        int id = user.getId();
+    public int add(User user) {
         String username = user.getUsername();
         String password = user.getPassword();
-        if (null == userMapper.getByUsernameAndPassword(username, password)) {
-            userMapper.insertUser(username, password);
-            log.info("插入用户：" + user);
+        username = HtmlUtils.htmlEscape(username);
+        user.setUsername(username);
 
-        } else {
-            userMapper.updateUser(username, password);
-            log.info("更新用户：" + user);
+        if (username.equals("") || password.equals("")) {
+            return 0;
         }
+
+        boolean exist = isExist(username);
+        if (exist) {
+            log.warn("已经存在用户:" + username);
+            return 2;
+        }
+
+        //生成随机16位盐
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        //hash迭代次数
+        int times = 2;
+        //MD5加密密码
+        String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
+        //存储盐和加密后密码
+        user.setSalt(salt);
+        user.setPassword(encodedPassword);
+        //插入用户
+        // 上面exist已经判断是否存在用户并返回状态码，此处无需再次判断是否存在，add方法只用作注册使用
+        userMapper.insertUser(username, encodedPassword, salt);
+        log.info("插入用户：" + user.getUsername() + " " + user.getPassword());
+
+        return 1;
     }
 
 
