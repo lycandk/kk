@@ -18,6 +18,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
+    /**
+     * 该方法将在每个Controller处理之前进行调用
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param o
+     * @return
+     * @throws Exception 后端登录拦截器
+     */
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
@@ -29,14 +38,16 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         Subject subject = SecurityUtils.getSubject();
         // 使用 shiro 验证
-        boolean rs = (subject.isAuthenticated());
+        boolean rs = (subject.isAuthenticated() && !subject.isRemembered());
         if (rs) {
             log.info("已经登录");
             log.info("isAuthenticated:" + subject.isAuthenticated());
+            log.info("isRemembered:" + subject.isRemembered());
             return true;
         }
         log.error("未登录");
         log.error("isAuthenticated:" + subject.isAuthenticated());
+        log.error("isRemembered:" + subject.isRemembered());
         return false;
     }
 

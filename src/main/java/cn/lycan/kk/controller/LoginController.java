@@ -35,6 +35,7 @@ public class LoginController {
         Subject subject = SecurityUtils.getSubject();
 
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,user.getPassword());
+        usernamePasswordToken.setRememberMe(true);
         try{
             subject.login(usernamePasswordToken);
             return ResultFactory.buildSuccessResult(username);
@@ -96,6 +97,11 @@ public class LoginController {
         return ResultFactory.buildSuccessResult(message);
     }
 
+    /**
+     * 访问每个页面前都向后端发送一个请求，目的是经由拦截器验证服务器端的登录状态，暂时留空
+     *
+     * @return
+     */
     @GetMapping("api/authentication")
     public String authentication() {
         return "身份认证成功";

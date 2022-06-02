@@ -17,6 +17,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootConfiguration
 public class webConfigurer implements WebMvcConfigurer {
 
+    /**
+     * 允许跨域的 cookie ：allowCredentials(true)
+     *
+     * @param registry
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -34,7 +39,7 @@ public class webConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getLoginIntercepter()).addPathPatterns("/**").excludePathPatterns("/api/login").
-                excludePathPatterns("/api/logout");
+                excludePathPatterns("/api/logout").excludePathPatterns("/api/register");
     }
 
     @Override
