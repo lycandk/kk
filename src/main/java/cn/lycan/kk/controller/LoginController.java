@@ -85,8 +85,9 @@ public class LoginController {
 //        //返回结果封装
 //        return ResultFactory.buildSuccessResult(user);
     }
+
     @GetMapping("api/logout")
-    public Result logout(){
+    public Result logout() {
         Subject subject = SecurityUtils.getSubject();
         //logout方法由DelegatingSubject实现Subject接口后实现该方法，
         // 该方法会清除 session、principals，并把 authenticated 设置为 false。
@@ -94,4 +95,10 @@ public class LoginController {
         String message = "成功登出";
         return ResultFactory.buildSuccessResult(message);
     }
+
+    @GetMapping("api/authentication")
+    public String authentication() {
+        return "身份认证成功";
+    }
+
 }
