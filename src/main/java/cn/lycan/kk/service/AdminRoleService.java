@@ -1,7 +1,10 @@
 package cn.lycan.kk.service;
 
 import cn.lycan.kk.dao.AdminRoleDao;
-import cn.lycan.kk.entity.*;
+import cn.lycan.kk.entity.AdminMenu;
+import cn.lycan.kk.entity.AdminPermission;
+import cn.lycan.kk.entity.AdminRole;
+import cn.lycan.kk.entity.AdminUserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;

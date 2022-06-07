@@ -1,7 +1,6 @@
 package cn.lycan.kk.service;
 
 import cn.lycan.kk.dao.AdminMenuDAO;
-import cn.lycan.kk.dao.AdminRoleMenuDAO;
 import cn.lycan.kk.entity.AdminMenu;
 import cn.lycan.kk.entity.AdminRoleMenu;
 import cn.lycan.kk.entity.AdminUserRole;
