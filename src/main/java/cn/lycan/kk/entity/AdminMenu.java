@@ -52,6 +52,7 @@ public class AdminMenu {
     
     /**
      * Parent menu.
+     * 父节点ID
      */
     private int parentId;
     
