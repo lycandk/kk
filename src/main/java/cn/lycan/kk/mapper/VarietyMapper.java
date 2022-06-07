@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Mapper
 public interface VarietyMapper {
-
+    
     /**
      * 查询所有variety
      *
@@ -24,7 +24,7 @@ public interface VarietyMapper {
      */
     @Select("SELECT * FROM variety")
     List<Variety> findall(Sort sort);
-
+    
     /**
      * 根据id查询variety
      *

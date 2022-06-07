@@ -23,28 +23,28 @@ import org.springframework.web.util.HtmlUtils;
 @CrossOrigin
 @Log4j2
 public class LoginController {
-
+    
     @Autowired
     UserService userService;
-
+    
     @PostMapping("api/login")
     public Result login(@RequestBody User user) {
         // 对 html 标签进行转义，防止 XSS 攻击
         String username = user.getUsername();
         username = HtmlUtils.htmlEscape(username);
         Subject subject = SecurityUtils.getSubject();
-
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,user.getPassword());
+        
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, user.getPassword());
         usernamePasswordToken.setRememberMe(true);
-        try{
+        try {
             subject.login(usernamePasswordToken);
             return ResultFactory.buildSuccessResult(username);
-        }catch (AuthenticationException e){
+        } catch (AuthenticationException e) {
             String message = "账户或密码错误！";
             return ResultFactory.buildFailureResult(message);
         }
     }
-
+    
     @PostMapping("api/register")
     public Result register(@RequestBody User user) {
 //        String username = user.getUsername();
@@ -86,7 +86,7 @@ public class LoginController {
 //        //返回结果封装
 //        return ResultFactory.buildSuccessResult(user);
     }
-
+    
     @GetMapping("api/logout")
     public Result logout() {
         Subject subject = SecurityUtils.getSubject();
@@ -96,7 +96,7 @@ public class LoginController {
         String message = "成功登出";
         return ResultFactory.buildSuccessResult(message);
     }
-
+    
     /**
      * 访问每个页面前都向后端发送一个请求，目的是经由拦截器验证服务器端的登录状态，暂时留空
      *
@@ -106,5 +106,5 @@ public class LoginController {
     public String authentication() {
         return "身份认证成功";
     }
-
+    
 }

@@ -23,11 +23,11 @@ import java.util.List;
 public class CatService {
     @Autowired
     CatMapper catMapper;
-
+    
     @Autowired
     VarietyService varietyService;
     Sort sort = Sort.by(Sort.DEFAULT_DIRECTION, "id");
-
+    
     /**
      * 按照id排序查找所有Cat
      *
@@ -37,7 +37,7 @@ public class CatService {
         log.info("按照id排序：" + sort + " " + "查找所有Cat");
         return catMapper.findAll(sort);
     }
-
+    
     /**
      * 根据id查找Cat
      *
@@ -48,7 +48,7 @@ public class CatService {
         log.info("根据id：" + id + " " + "查询cat");
         return catMapper.findById(id);
     }
-
+    
     /**
      * 根据id获取到的Cat是否为空判断新增或者更新
      *
@@ -63,7 +63,7 @@ public class CatService {
             catMapper.update(cat);
         }
     }
-
+    
     public void deleteById(int id) {
         if (null == getById(id)) {
             log.info("无法删除，找不到id为：" + id + "的cat");
@@ -72,7 +72,7 @@ public class CatService {
             catMapper.deleteById(id);
         }
     }
-
+    
     public List<Cat> listByVariety(int vid) {
         Variety variety = varietyService.getById(vid);
         log.info("根据vid：" + vid + "查询相关猫咪");
@@ -84,10 +84,10 @@ public class CatService {
             return catMapper.findAllByVariety(variety.getId());
         }
     }
-
+    
     public List<Cat> findAllByNameLikeOrVarietyLike(String keyword) {
         log.info("根据关键词：" + keyword + "查找相关猫咪");
         return catMapper.findAllByNameLikeOrVarietyLike(keyword);
     }
-
+    
 }

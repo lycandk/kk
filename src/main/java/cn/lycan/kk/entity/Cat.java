@@ -23,6 +23,6 @@ public class Cat {
     String birthdate;
     String abs;
     private Variety varieties;
-
-
+    
+    
 }

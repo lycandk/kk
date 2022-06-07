@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Mapper
 public interface CatMapper {
-
+    
     /**
      * 根据Variety找到相关Cat
      *
@@ -25,7 +25,7 @@ public interface CatMapper {
     @Select("SELECT * FROM cat WHERE vid = #{vid}")
     @Result(column = "vid", property = "varieties", javaType = Variety.class, one = @One(select = "cn.lycan.kk.mapper.VarietyMapper.findById"))
     List<Cat> findAllByVariety(int vid);
-
+    
     /**
      * 根据关键词模糊查询相关nickname或variety的Cat
      *
@@ -35,7 +35,7 @@ public interface CatMapper {
     @Select("SELECT * FROM cat WHERE nickname LIKE #{keyword} OR variety LIKE #{keyword}")
     @Result(column = "vid", property = "varieties", javaType = Variety.class, one = @One(select = "cn.lycan.kk.mapper.VarietyMapper.findById"))
     List<Cat> findAllByNameLikeOrVarietyLike(String keyword);
-
+    
     /**
      * 按照sort排序规则查询Cat
      *
@@ -45,7 +45,7 @@ public interface CatMapper {
     @Select("SELECT * FROM cat")
     @Result(column = "vid", property = "varieties", javaType = Variety.class, one = @One(select = "cn.lycan.kk.mapper.VarietyMapper.findById"))
     List<Cat> findAll(Sort sort);
-
+    
     /**
      * 通过id查询Cat
      *
@@ -54,7 +54,7 @@ public interface CatMapper {
      */
     @Select("SELECT * FROM cat WHERE id = #{id}")
     Cat findById(int id);
-
+    
     /**
      * 插入Cat
      *
@@ -64,8 +64,8 @@ public interface CatMapper {
             "VALUES (#{cover},#{nickname},#{variety},#{scientificname},#{latinname},#{placeoforigin},#{color},#{birthdate}," +
             "#{abs},#{varieties.id})")
     void add(Cat cat);
-
-
+    
+    
     /**
      * 根据id更新Cat
      *
@@ -74,7 +74,7 @@ public interface CatMapper {
     @Update("UPDATE cat SET cover=#{cover},nickname=#{nickname},variety=#{variety},scientificname=#{scientificname},latinname=#{latinname}," +
             "placeoforigin=#{placeoforigin},color=#{color},birthdate=#{birthdate},abs=#{abs},vid=#{varieties.id} WHERE id = #{id}")
     void update(Cat cat);
-
+    
     /**
      * 根据id删除Cat
      *
@@ -82,6 +82,6 @@ public interface CatMapper {
      */
     @Delete("DELETE FROM cat WHERE id =#{id}")
     void deleteById(int id);
-
-
+    
+    
 }

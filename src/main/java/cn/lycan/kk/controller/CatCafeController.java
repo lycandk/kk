@@ -23,28 +23,28 @@ import java.util.List;
 @CrossOrigin
 @Log4j2
 public class CatCafeController {
-
+    
     @Autowired
     CatService catService;
-
+    
     @Autowired
     VarietyService varietyService;
-
+    
     @GetMapping("/api/cats")
     public List<Cat> catList() {
         return catService.catList();
     }
-
+    
     @PostMapping("/api/cats")
     public void addOrUpdate(@RequestBody Cat cat) throws Exception {
         catService.addOrUpdate(cat);
     }
-
+    
     @PostMapping("/api/delete")
     public void deleteCatById(@RequestBody Cat cat) throws Exception {
         catService.deleteById(cat.getId());
     }
-
+    
     @GetMapping("/api/varieties/{vid}/cats")
     public List<Cat> listByVariety(@PathVariable("vid") int vid) {
         if (0 == vid) {
@@ -53,7 +53,7 @@ public class CatCafeController {
             return catService.listByVariety(vid);
         }
     }
-
+    
     @GetMapping("/api/search")
     public List<Cat> searchCats(@RequestParam("keyword") String keyword) {
         if ("".equals(keyword)) {
@@ -62,7 +62,7 @@ public class CatCafeController {
             return catService.findAllByNameLikeOrVarietyLike(keyword);
         }
     }
-
+    
     @PostMapping("api/covers")
     /**
      * 涉及到对文件的操作，对接收到的文件重命名，但保留原始的格式。可以进一步做一下压缩，或者校验前端传来的数据是否为指定格式，这里不再赘述。

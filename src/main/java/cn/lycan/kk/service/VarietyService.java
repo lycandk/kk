@@ -22,7 +22,7 @@ import java.util.List;
 public class VarietyService {
     @Autowired
     VarietyMapper varietyMapper;
-
+    
     /**
      * 查询所有Variety并根据id排序
      *
@@ -33,7 +33,7 @@ public class VarietyService {
         log.info("根据:" + sort + " " + "sortbyid查找所有Variety:");
         return varietyMapper.findall(sort);
     }
-
+    
     /**
      * 根据id查找Variety
      *

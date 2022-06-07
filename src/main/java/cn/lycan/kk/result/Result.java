@@ -17,7 +17,7 @@ public class Result {
     int code;
     String message;
     Object result;
-
+    
     public Result(int code) {
         this.code = code;
     }

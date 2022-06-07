@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @SpringBootConfiguration
 public class webConfigurer implements WebMvcConfigurer {
-
+    
     /**
      * 允许跨域的 cookie ：allowCredentials(true)
      *
@@ -30,18 +30,18 @@ public class webConfigurer implements WebMvcConfigurer {
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
                 .allowedHeaders("*");
     }
-
+    
     @Bean
-    public LoginInterceptor getLoginIntercepter() {
+    public LoginInterceptor getLoginInterceptor() {
         return new LoginInterceptor();
     }
-
+    
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getLoginIntercepter()).addPathPatterns("/**").excludePathPatterns("/api/login").
+        registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/api/login").
                 excludePathPatterns("/api/logout").excludePathPatterns("/api/register");
     }
-
+    
     @Override
     /**
      * 将前端图片URL与后端资源文件夹d:/Software/webpfojects/kittykitty/kk/src/main/resources/workspace/image/对应

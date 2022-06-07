@@ -23,7 +23,7 @@ public interface UserMapper {
      */
     @Select("SELECT * FROM user WHERE username = #{username}")
     User findByUsername(String username);
-
+    
     /**
      * 根据用户名以及密码查找用户
      *
@@ -33,7 +33,7 @@ public interface UserMapper {
      */
     @Select("SELECT * FROM user WHERE username = #{username} AND password = #{password}")
     User getByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
-
+    
     /**
      * 更新用户
      *
@@ -44,7 +44,7 @@ public interface UserMapper {
      */
     @Update("UPDATE user SET username = #{username}, password = #{password}, salt = #{salt}")
     int updateUser(@Param("username") String username, @Param("password") String password, @Param("salt") String salt);
-
+    
     /**
      * 插入用户
      *

@@ -24,38 +24,38 @@ public class UserService {
     UserMapper userMapper;
     @Autowired
     User user;
-
+    
     public boolean isExist(String username) {
         User user = getByName(username);
         return null != user;
     }
-
+    
     public User getByName(String username) {
         log.info("根据用户名获取用户：" + username);
         return userMapper.findByUsername(username);
     }
-
+    
     public User get(String username, String password) {
         log.info("根据用户名以及密码获取用户：" + username + " , " + password);
         return userMapper.getByUsernameAndPassword(username, password);
     }
-
+    
     public int add(User user) {
         String username = user.getUsername();
         String password = user.getPassword();
         username = HtmlUtils.htmlEscape(username);
         user.setUsername(username);
-
+        
         if (username.equals("") || password.equals("")) {
             return 0;
         }
-
+        
         boolean exist = isExist(username);
         if (exist) {
             log.warn("已经存在用户:" + username);
             return 2;
         }
-
+        
         //生成随机16位盐
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
         //hash迭代次数
@@ -69,9 +69,9 @@ public class UserService {
         // 上面exist已经判断是否存在用户并返回状态码，此处无需再次判断是否存在，add方法只用作注册使用
         userMapper.insertUser(username, encodedPassword, salt);
         log.info("插入用户：" + user.getUsername() + " " + user.getPassword());
-
+        
         return 1;
     }
-
-
+    
+    
 }
