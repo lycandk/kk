@@ -3,6 +3,7 @@ package cn.lycan.kk.service;
 import cn.lycan.kk.dao.AdminRolePermissionDao;
 import cn.lycan.kk.entity.AdminPermission;
 import cn.lycan.kk.entity.AdminRolePermission;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.List;
  * @description
  */
 @Service
+@Slf4j
 public class AdminRolePermissionService {
     @Autowired
     AdminRolePermissionDao adminRolePermissionDao;
@@ -27,6 +29,7 @@ public class AdminRolePermissionService {
     
     @Transactional
     public void savePermChanges(int rid, List<AdminPermission> perms) {
+        log.warn("根据角色id:" + rid + "删除对应的功能权限");
         adminRolePermissionDao.deleteAllByRid(rid);
         List<AdminRolePermission> adminRolePermissions = new ArrayList<>();
         perms.forEach(p -> {
@@ -35,7 +38,7 @@ public class AdminRolePermissionService {
             adminRolePermission.setPid(p.getId());
             adminRolePermissions.add(adminRolePermission);
         });
-        
+        log.info("对id为：" + rid + "的角色添加功能权限：" + adminRolePermissions.toString());
         adminRolePermissionDao.saveAll(adminRolePermissions);
     }
 }

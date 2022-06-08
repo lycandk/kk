@@ -5,6 +5,7 @@ import cn.lycan.kk.entity.AdminMenu;
 import cn.lycan.kk.entity.AdminPermission;
 import cn.lycan.kk.entity.AdminRole;
 import cn.lycan.kk.entity.AdminUserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  * @description
  */
 @Service
+@Slf4j
 public class AdminRoleService {
     
     @Autowired
@@ -49,6 +51,7 @@ public class AdminRoleService {
             adminRole.setPerms(adminPermissions);
             adminRole.setMenus(adminMenus);
         }
+        log.info("根据功能权限以及菜单获取AdminRoles:" + adminRoles);
         return adminRoles;
     }
     
@@ -57,6 +60,7 @@ public class AdminRoleService {
     }
     
     public void addOrUpdate(AdminRole adminRole) {
+        log.info("添加或更新角色：" + adminRole);
         adminRoleDao.save(adminRole);
     }
     
@@ -69,12 +73,16 @@ public class AdminRoleService {
     
     public AdminRole updateRoleStatus(AdminRole adminRole) {
         AdminRole adminRoleInDb = adminRoleDao.getById(adminRole.getId());
+        log.info("根据角色id:" + adminRole + "从数据库中获取角色：" + adminRoleInDb);
         adminRoleInDb.setEnabled(adminRole.isEnabled());
+        log.info("使能角色：" + adminRole.isEnabled());
         return adminRoleDao.save(adminRoleInDb);
     }
     
     public void editRole(@RequestBody AdminRole adminRole) {
+        log.info("保存角色:" + adminRole);
         adminRoleDao.save(adminRole);
+        log.info("保存该角色对应的功能权限：" + adminRole.getPerms().toString());
         adminRolePermissionService.savePermChanges(adminRole.getId(), adminRole.getPerms());
     }
 }

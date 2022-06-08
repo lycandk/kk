@@ -5,6 +5,7 @@ import cn.lycan.kk.dao.AdminRolePermissionDao;
 import cn.lycan.kk.entity.AdminPermission;
 import cn.lycan.kk.entity.AdminRole;
 import cn.lycan.kk.entity.AdminRolePermission;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * @description
  */
 @Service
+@Slf4j
 public class AdminPermissionService {
     
     @Autowired
@@ -42,6 +44,7 @@ public class AdminPermissionService {
     UserService userService;
     
     public List<AdminPermission> list() {
+        log.info("获取所有功能权限");
         return adminPermissionDao.findAll();
     }
     
