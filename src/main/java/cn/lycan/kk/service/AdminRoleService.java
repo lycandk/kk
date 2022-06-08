@@ -7,6 +7,7 @@ import cn.lycan.kk.entity.AdminRole;
 import cn.lycan.kk.entity.AdminUserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -29,6 +30,7 @@ public class AdminRoleService {
     @Autowired
     UserService userService;
     
+    @Lazy
     @Autowired
     AdminUserRoleService adminUserRoleService;
     

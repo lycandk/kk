@@ -1,16 +1,20 @@
 package cn.lycan.kk.service;
 
+import cn.lycan.kk.dao.UserDao;
+import cn.lycan.kk.dto.UserDTO;
+import cn.lycan.kk.entity.AdminRole;
 import cn.lycan.kk.entity.User;
-import cn.lycan.kk.mapper.UserMapper;
 import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Makkapakka
@@ -23,35 +27,66 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class UserService {
     @Autowired
-    UserMapper userMapper;
+    UserDao userDao;
+    
+    @Lazy
     @Autowired
-    User user;
+    AdminRoleService adminRoleService;
+    
+    @Autowired
+    AdminUserRoleService adminUserRoleService;
+    
+    public List<UserDTO> list() {
+        List<User> users = userDao.findAll();
+        // Find all roles in DB to enable JPA persistence context.
+        // List<AdminRole> allRoles = adminRoleService.findAll();
+        
+        List<UserDTO> userDTOS = users
+                .stream().map(user -> (UserDTO) new UserDTO().convertFrom(user)).collect(Collectors.toList());
+        
+        userDTOS.forEach(u -> {
+            List<AdminRole> roles = adminRoleService.listRoleByUser(u.getUsername());
+            u.setRoles(roles);
+        });
+        
+        return userDTOS;
+    }
     
     public boolean isExist(String username) {
-        User user = getByName(username);
+        User user = userDao.findByUsername(username);
         return null != user;
     }
     
     public User getByName(String username) {
         log.info("根据用户名获取用户：" + username);
-        return userMapper.findByUsername(username);
+        return userDao.findByUsername(username);
     }
     
     public User get(String username, String password) {
         log.info("根据用户名以及密码获取用户：" + username + " , " + password);
-        return userMapper.getByUsernameAndPassword(username, password);
+        return userDao.getByUsernameAndPassword(username, password);
     }
     
     public int add(User user) {
         String username = user.getUsername();
         String password = user.getPassword();
+        String name = user.getName();
+        String phone = user.getPhone();
+        String email = user.getEmail();
         username = HtmlUtils.htmlEscape(username);
         user.setUsername(username);
-        
+        name = HtmlUtils.htmlEscape(name);
+        user.setName(name);
+        phone = HtmlUtils.htmlEscape(phone);
+        user.setPhone(phone);
+        email = HtmlUtils.htmlEscape(email);
+        user.setEmail(email);
+        user.setEnabled(true);
+    
         if (username.equals("") || password.equals("")) {
             return 0;
         }
-        
+    
         boolean exist = isExist(username);
         if (exist) {
             log.warn("已经存在用户:" + username);
@@ -69,15 +104,19 @@ public class UserService {
         user.setPassword(encodedPassword);
         //插入用户
         // 上面exist已经判断是否存在用户并返回状态码，此处无需再次判断是否存在，add方法只用作注册使用
-        userMapper.insertUser(username, encodedPassword, salt);
+        userDao.save(user);
         log.info("插入用户：" + user.getUsername() + " " + user.getPassword());
     
         return 1;
     }
     
-    
-    public List<User> list() {
-        log.info("获取所有用户：" + userMapper.findAll());
-        return userMapper.findAll();
+    public void updateUserStatus(User user) {
+        User userInDB = userDao.findByUsername(user.getUsername());
+        log.info("根据用户名：" + user.getUsername() + "，找到用户：" + userInDB);
+        userInDB.setEnabled(user.isEnabled());
+        log.info("使能用户：" + user.isEnabled());
+        userDao.save(userInDB);
     }
+    
+    
 }
