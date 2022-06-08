@@ -51,6 +51,7 @@ public class AdminPermissionService {
     /**
      * Determine whether client requires permission when requests
      * a certain API.
+     * 用于判断用户请求接口的是否在权限列表中。如果没有对应权限，说明不需要维护。
      *
      * @param requestAPI
      * @return
@@ -71,6 +72,12 @@ public class AdminPermissionService {
         return adminPermissionDao.findAllById(pids);
     }
     
+    /**
+     * 根据当前用户获取所有权限，只需要 url 一个字段
+     *
+     * @param username
+     * @return
+     */
     public Set<String> listPermissonByURLsByUser(String username) {
         List<Integer> rids = adminRoleService.listRoleByUser(username).stream().map(AdminRole::getId).collect(Collectors.toList());
         

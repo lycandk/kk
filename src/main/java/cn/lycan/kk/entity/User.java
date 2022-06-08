@@ -12,8 +12,12 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class User {
-    String username;
-    String password;
-    String salt;
+    private String username;
+    private String name;
+    private String password;
+    private String phone;
+    private String email;
+    private String salt;
     private Integer id;
+    private boolean enabled;
 }

@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author Makkapakka
  * @date 2022-5-26
@@ -55,4 +57,12 @@ public interface UserMapper {
      */
     @Insert("INSERT INTO user (username,password,salt) VALUES (#{username},#{password},#{salt})")
     int insertUser(@Param("username") String username, @Param("password") String password, @Param("salt") String salt);
+    
+    /**
+     * 获取所有用户
+     *
+     * @return
+     */
+    @Select("SELECT * FROM user")
+    List<User> findAll();
 }

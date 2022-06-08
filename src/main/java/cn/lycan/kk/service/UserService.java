@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.List;
+
 /**
  * @author Makkapakka
  * @date 2022-5-26
@@ -69,9 +71,13 @@ public class UserService {
         // 上面exist已经判断是否存在用户并返回状态码，此处无需再次判断是否存在，add方法只用作注册使用
         userMapper.insertUser(username, encodedPassword, salt);
         log.info("插入用户：" + user.getUsername() + " " + user.getPassword());
-        
+    
         return 1;
     }
     
     
+    public List<User> list() {
+        log.info("获取所有用户：" + userMapper.findAll());
+        return userMapper.findAll();
+    }
 }
