@@ -1,6 +1,8 @@
 package cn.lycan.kk.controller;
 
 import cn.lycan.kk.entity.Cat;
+import cn.lycan.kk.result.Result;
+import cn.lycan.kk.result.ResultFactory;
 import cn.lycan.kk.service.CatService;
 import cn.lycan.kk.service.VarietyService;
 import cn.lycan.kk.utils.StringUtils;
@@ -31,8 +33,8 @@ public class CatCafeController {
     VarietyService varietyService;
     
     @GetMapping("/api/cats")
-    public List<Cat> catList() {
-        return catService.catList();
+    public Result catList() {
+        return ResultFactory.buildSuccessResult(catService.catList());
     }
     
     @PostMapping("/api/cats")
@@ -46,11 +48,11 @@ public class CatCafeController {
     }
     
     @GetMapping("/api/varieties/{vid}/cats")
-    public List<Cat> listByVariety(@PathVariable("vid") int vid) {
+    public Result listByVariety(@PathVariable("vid") int vid) {
         if (0 == vid) {
-            return catList();
+            return ResultFactory.buildSuccessResult(catList());
         } else {
-            return catService.listByVariety(vid);
+            return ResultFactory.buildSuccessResult(catService.listByVariety(vid));
         }
     }
     
