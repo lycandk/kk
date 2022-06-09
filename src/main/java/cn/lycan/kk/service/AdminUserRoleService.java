@@ -3,6 +3,7 @@ package cn.lycan.kk.service;
 import cn.lycan.kk.dao.AdminUserRoleDAO;
 import cn.lycan.kk.entity.AdminRole;
 import cn.lycan.kk.entity.AdminUserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.List;
  * @description
  */
 @Service
+@Slf4j
 public class AdminUserRoleService {
     
     @Autowired
@@ -30,18 +32,23 @@ public class AdminUserRoleService {
     public void saveRoleChanges(int uid, List<AdminRole> rids) {
         //先删除对应用户ID的角色
         adminUserRoleDAO.deleteAllByUid(uid);
+        log.info("删除id为：" + uid + "的用户所属的角色");
         //用户角色列表
         List<AdminUserRole> adminUserRoles = new ArrayList<>();
         rids.forEach(r -> {
             AdminUserRole adminUserRole = new AdminUserRole();
             //设置用户ID
             adminUserRole.setUid(uid);
+            log.info("设置用户id:" + uid);
             //设置角色id
             adminUserRole.setRid(r.getId());
+            log.info("设置角色id：" + r.getId());
             //添加进用户角色列表
             adminUserRoles.add(adminUserRole);
+            log.info("添加进用户角色列表:" + adminUserRoles);
         });
-        
+    
+        log.info("存入用户角色列表:" + adminUserRoles);
         adminUserRoleDAO.saveAll(adminUserRoles);
     }
 }

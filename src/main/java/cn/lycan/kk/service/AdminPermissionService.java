@@ -69,6 +69,7 @@ public class AdminPermissionService {
     
     public List<AdminPermission> listPermsByRoleId(int rid) {
         List<Integer> pids = adminRolePermissionService.findAllByRid(rid).stream().map(AdminRolePermission::getPid).collect(Collectors.toList());
+        log.info("根据角色id:" + rid + "获取功能权限id:" + pids);
         return adminPermissionDao.findAllById(pids);
     }
     

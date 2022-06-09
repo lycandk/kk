@@ -45,15 +45,23 @@ public class AdminRoleService {
     
     public List<AdminRole> listWithPermsAndMenus() {
         List<AdminRole> adminRoles = adminRoleDao.findAll();
+        log.info("获取所有角色：" + adminRoles);
         List<AdminPermission> adminPermissions;
         List<AdminMenu> adminMenus;
+        log.info("--------遍历开始---------");
         for (AdminRole adminRole : adminRoles) {
+            log.info("根据角色id：" + adminRole.getId() + "获取对应的功能权限：" + adminPermissionService.listPermsByRoleId(adminRole.getId()));
             adminPermissions = adminPermissionService.listPermsByRoleId(adminRole.getId());
+            log.info("将获取的功能权限赋值给功能权限列表:" + adminPermissions);
+            log.info("根据角色id：" + adminRole.getId() + "获取对应的菜单权限：" + adminMenuService.getMenusByRoleId(adminRole.getId()));
             adminMenus = adminMenuService.getMenusByRoleId(adminRole.getId());
+            log.info("将获取的菜单权限赋值给菜单权限列表:" + adminMenus);
             adminRole.setPerms(adminPermissions);
             adminRole.setMenus(adminMenus);
+            log.info("对" + adminRole + "设置功能权限:" + adminPermissions + ";" + "设置菜单权限:" + adminMenus);
         }
-        log.info("根据功能权限以及菜单获取AdminRoles:" + adminRoles);
+        log.info("--------遍历结束---------");
+        log.info("AdminRoles:" + adminRoles);
         return adminRoles;
     }
     
@@ -69,7 +77,9 @@ public class AdminRoleService {
     
     public List<AdminRole> listRoleByUser(String username) {
         int uid = userService.getByName(username).getId();
+        log.info("根据:" + username + "获取用户id：" + uid);
         List<Integer> rids = adminUserRoleService.findAllByUid(uid).stream().map(AdminUserRole::getRid).collect(Collectors.toList());
+        log.info("通过用户id:" + uid + "获取对应的所有角色:" + rids);
         return adminRoleDao.findAllById(rids);
     }
     

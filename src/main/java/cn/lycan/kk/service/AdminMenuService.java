@@ -52,19 +52,21 @@ public class AdminMenuService {
     
         //Get Current User in DB
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        log.info("从shiro中获取当前登录用户:" + userName);
         User user = userService.getByName(userName);
+        log.info("从数据库中获取用户:" + user);
     
         //Get roles' ids of current user
         //使用了 stream 来简化列表的处理，包括使用 map() 提取集合中的某一属性
         List<Integer> rids = adminUserRoleService.findAllByUid(user.getId()).stream().map(AdminUserRole::getRid).collect(Collectors.toList());
-        log.info("根据用户：" + user.getUsername() + "获取角色id: " + rids.toString());
+        log.info("根据用户：" + user.getUsername() + "获取角色id列表: " + rids.toString());
     
         //Get Menu items of these roles
         //通过 distinct() 对查询出的菜单项进行了去重操作，避免多角色情况下有冗余的菜单
         List<Integer> mids = adminRoleMenuService.findAllByRidIn(rids).stream().map(AdminRoleMenu::getMid).collect(Collectors.toList());
+        log.info("根据角色id列表：" + rids + "获取菜单id: " + mids.toString());
         List<AdminMenu> menus = adminMenuDAO.findAllById(mids).stream().distinct().collect(Collectors.toList());
-        log.info("根据用户：" + user.getUsername() + "获取菜单id: " + mids.toString());
-        log.info("根据菜单id：" + rids.toString() + "获取菜单: " + menus.toString());
+        log.info("根据菜单id：" + rids.toString() + "获取功能菜单: " + menus.toString());
     
         //adjust the menu structure
         //调整菜单结构
@@ -76,7 +78,9 @@ public class AdminMenuService {
     
     public List<AdminMenu> getMenusByRoleId(int rid) {
         List<Integer> menuIds = adminRoleMenuService.findAllByRid(rid).stream().map(AdminRoleMenu::getMid).collect(Collectors.toList());
+        log.info("根据角色id：" + rid + "获取功能菜单id: " + menuIds);
         List<AdminMenu> menus = adminMenuDAO.findAllById(menuIds);
+        log.info("根据菜单id：" + menuIds + "获取功能菜单: " + menus);
         
         handleMenus(menus);
         return menus;
@@ -90,11 +94,16 @@ public class AdminMenuService {
      *              剔除掉所有子项，只保留第一层的父项。比如 c 是 b 的子项，b 是 a 的子项，我们最后只要保留 a 就行，因为 a 包含了 b 和 c
      */
     private void handleMenus(List<AdminMenu> menus) {
+        log.info("-------遍历开始-------");
         menus.forEach(m -> {
             List<AdminMenu> children = getAllByParentId(m.getId());
+            log.info("通过父节点id:" + m.getId() + "获取子节点列表" + children);
             m.setChildren(children);
+            log.info("将" + children + "存入" + m);
         });
-        
+        log.info("-------遍历结束-------");
+    
         menus.removeIf(m -> m.getParentId() != 0);
+        log.info("将父节点不为0的AdminMenu从" + menus + "中移除");
     }
 }

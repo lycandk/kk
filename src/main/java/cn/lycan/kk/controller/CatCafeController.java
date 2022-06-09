@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @author Makkapakka
@@ -37,35 +37,37 @@ public class CatCafeController {
         return ResultFactory.buildSuccessResult(catService.catList());
     }
     
-    @PostMapping("/api/cats")
-    public void addOrUpdate(@RequestBody Cat cat) throws Exception {
+    @PostMapping("/api/admin/content/cats")
+    public Result addOrUpdate(@RequestBody Cat cat) throws Exception {
         catService.addOrUpdate(cat);
+        return ResultFactory.buildSuccessResult("修改成功");
     }
     
-    @PostMapping("/api/delete")
-    public void deleteCatById(@RequestBody Cat cat) throws Exception {
+    @PostMapping("/api/admin/content/cats/delete")
+    public Result deleteCatById(@RequestBody @Valid Cat cat) throws Exception {
         catService.deleteById(cat.getId());
+        return ResultFactory.buildSuccessResult("删除成功");
     }
     
     @GetMapping("/api/varieties/{vid}/cats")
     public Result listByVariety(@PathVariable("vid") int vid) {
-        if (0 == vid) {
-            return ResultFactory.buildSuccessResult(catList());
-        } else {
+        if (0 != vid) {
             return ResultFactory.buildSuccessResult(catService.listByVariety(vid));
+        } else {
+            return ResultFactory.buildSuccessResult(catService.catList());
         }
     }
     
     @GetMapping("/api/search")
-    public List<Cat> searchCats(@RequestParam("keyword") String keyword) {
+    public Result searchCats(@RequestParam("keyword") String keyword) {
         if ("".equals(keyword)) {
-            return catService.catList();
+            return ResultFactory.buildSuccessResult(catService.catList());
         } else {
-            return catService.findAllByNameLikeOrVarietyLike(keyword);
+            return ResultFactory.buildSuccessResult(catService.search(keyword));
         }
     }
     
-    @PostMapping("api/covers")
+    @PostMapping("/api/admin/content/cats/covers")
     /**
      * 涉及到对文件的操作，对接收到的文件重命名，但保留原始的格式。可以进一步做一下压缩，或者校验前端传来的数据是否为指定格式，这里不再赘述。
      */

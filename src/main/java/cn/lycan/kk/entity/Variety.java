@@ -1,7 +1,10 @@
 package cn.lycan.kk.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import lombok.ToString;
+
+import javax.persistence.*;
 
 /**
  * @author Makkapakka
@@ -10,8 +13,15 @@ import org.springframework.stereotype.Component;
  * @description 品种分类实体类
  */
 @Data
-@Component
+@Entity
+@Table(name = "variety")
+@ToString
+@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class Variety {
-    int id;
-    String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    
+    private String name;
 }

@@ -27,10 +27,12 @@ public class AdminRoleMenuService {
     AdminRoleMenuDAO adminRoleMenuDAO;
     
     public List<AdminRoleMenu> findAllByRid(int rid) {
+        log.info("通过角色id:" + rid + "找到所有对应的功能菜单id:" + adminRoleMenuDAO.findAllByRid(rid));
         return adminRoleMenuDAO.findAllByRid(rid);
     }
     
     public List<AdminRoleMenu> findAllByRidIn(List<Integer> ridList) {
+        log.info("通过角色id列表:" + ridList + "找到所有对应的功能菜单id:" + adminRoleMenuDAO.findAllByRidIn(ridList));
         return adminRoleMenuDAO.findAllByRidIn(ridList);
     }
     
@@ -44,13 +46,19 @@ public class AdminRoleMenuService {
         log.warn("根据角色id" + rid + "删除对应的所有菜单");
         adminRoleMenuDAO.deleteAllByRid(rid);
         List<AdminRoleMenu> adminRoleMenus = new ArrayList<>();
+        log.info("------遍历开始------");
         for (Integer mid : menuIds.get("menusIds")) {
+            log.info("获取到功能菜单id:" + mid);
             AdminRoleMenu adminRoleMenu = new AdminRoleMenu();
+            log.info("对:" + adminRoleMenu + "设置角色id:" + rid);
             adminRoleMenu.setRid(rid);
+            log.info("对:" + adminRoleMenu + "设置功能菜单id:" + mid);
             adminRoleMenu.setMid(mid);
             adminRoleMenus.add(adminRoleMenu);
+            log.info("将:" + adminRoleMenu + "添加进:" + adminRoleMenus);
         }
-        log.info("对id为：" + rid + "的角色添加菜单：" + adminRoleMenus.toString());
+        log.info("------遍历结束------");
+        log.info("adminRoleMenu" + adminRoleMenus);
         adminRoleMenuDAO.saveAll(adminRoleMenus);
     }
 }

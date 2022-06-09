@@ -24,6 +24,7 @@ public class AdminRolePermissionService {
     AdminRolePermissionDao adminRolePermissionDao;
     
     public List<AdminRolePermission> findAllByRid(int rid) {
+        log.info("根据角色id:" + rid + "获取对应的所有功能权限:" + adminRolePermissionDao.findAllByRid(rid));
         return adminRolePermissionDao.findAllByRid(rid);
     }
     
@@ -32,13 +33,18 @@ public class AdminRolePermissionService {
         log.warn("根据角色id:" + rid + "删除对应的功能权限");
         adminRolePermissionDao.deleteAllByRid(rid);
         List<AdminRolePermission> adminRolePermissions = new ArrayList<>();
+        log.info("------遍历开始------");
         perms.forEach(p -> {
             AdminRolePermission adminRolePermission = new AdminRolePermission();
             adminRolePermission.setRid(rid);
+            log.info("对" + adminRolePermission + "设置角色id:" + rid);
             adminRolePermission.setPid(p.getId());
+            log.info("对" + adminRolePermission + "设置功能权限id:" + p.getId());
             adminRolePermissions.add(adminRolePermission);
+            log.info("将" + adminRolePermission + "添加进adminRolePermissions列表");
         });
-        log.info("对id为：" + rid + "的角色添加功能权限：" + adminRolePermissions.toString());
+        log.info("------遍历结束------");
+        log.info("adminRolePermissions列表:" + adminRolePermissions);
         adminRolePermissionDao.saveAll(adminRolePermissions);
     }
 }

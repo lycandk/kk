@@ -38,14 +38,17 @@ public class UserService {
     
     public List<UserDTO> list() {
         List<User> users = userDao.findAll();
+        log.info("执行userDao.findAll()，获取数据库中所有用户:" + users);
         // Find all roles in DB to enable JPA persistence context.
         // List<AdminRole> allRoles = adminRoleService.findAll();
         
         List<UserDTO> userDTOS = users
                 .stream().map(user -> (UserDTO) new UserDTO().convertFrom(user)).collect(Collectors.toList());
+        log.info("执行convertFrom()方法，将users转换为userDTOS:" + userDTOS);
         
         userDTOS.forEach(u -> {
             List<AdminRole> roles = adminRoleService.listRoleByUser(u.getUsername());
+            log.info("执行listRoleByUser()方法，根据username遍历获取用户对应的角色" + roles);
             u.setRoles(roles);
         });
         
@@ -58,7 +61,7 @@ public class UserService {
     }
     
     public User getByName(String username) {
-        log.info("根据用户名获取用户：" + username);
+        log.info("执行getByName()方法，根据用户名获取用户：" + username);
         return userDao.findByUsername(username);
     }
     
@@ -84,6 +87,7 @@ public class UserService {
         user.setEnabled(true);
     
         if (username.equals("") || password.equals("")) {
+            log.error("用户名或者密码为空");
             return 0;
         }
     
@@ -95,19 +99,19 @@ public class UserService {
         
         //生成随机16位盐
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
-        log.info("生产随机盐：" + salt);
+        log.info("生成随机盐：" + salt);
         //hash迭代次数
         int times = 2;
         //MD5加密密码
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
-        log.info("生产随机加密密码：" + encodedPassword);
+        log.info("生成随机加密密码：" + encodedPassword);
         //存储盐和加密后密码
         user.setSalt(salt);
         user.setPassword(encodedPassword);
         //插入用户
         // 上面exist已经判断是否存在用户并返回状态码，此处无需再次判断是否存在，add方法只用作注册使用
         userDao.save(user);
-        log.info("插入用户：" + user);
+        log.info("插入或更新用户：" + user);
     
         return 1;
     }
@@ -130,7 +134,7 @@ public class UserService {
         userDao.save(userInDB);
         log.info("存入用户：" + userInDB);
         adminUserRoleService.saveRoleChanges(userInDB.getId(), user.getRoles());
-        log.info("赋予id为：" + userInDB.getId() + "的用户角色：" + user.getRoles());
+        log.info("为id：" + userInDB.getId() + "的用户设置角色：" + user.getRoles());
     }
     
     

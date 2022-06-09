@@ -1,7 +1,7 @@
 package cn.lycan.kk.service;
 
+import cn.lycan.kk.dao.VarietyDAO;
 import cn.lycan.kk.entity.Variety;
-import cn.lycan.kk.mapper.VarietyMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,7 +21,7 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class VarietyService {
     @Autowired
-    VarietyMapper varietyMapper;
+    VarietyDAO varietyDAO;
     
     /**
      * 查询所有Variety并根据id排序
@@ -30,8 +30,8 @@ public class VarietyService {
      */
     public List<Variety> varietyList() {
         Sort sort = Sort.by(Sort.DEFAULT_DIRECTION, "id");
-        log.info("根据:" + sort + " " + "sortbyid查找所有Variety:");
-        return varietyMapper.findall(sort);
+        log.info("执行方法：varietyList()，根据:" + sort + "," + "查找所有Variety:" + varietyDAO.findAll(sort));
+        return varietyDAO.findAll(sort);
     }
     
     /**
@@ -41,8 +41,8 @@ public class VarietyService {
      * @return
      */
     public Variety getById(int id) {
-        log.info("根据id:" + id + " " + "查找Variety");
-        Variety v = varietyMapper.findById(id);
+        Variety v = varietyDAO.findById(id).orElse(null);
+        log.info("执行方法:getById(int id),根据id:" + id + " " + "查找到Variety：" + v);
         return v;
     }
 }
