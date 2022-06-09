@@ -95,17 +95,19 @@ public class UserService {
         
         //生成随机16位盐
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        log.info("生产随机盐：" + salt);
         //hash迭代次数
         int times = 2;
         //MD5加密密码
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
+        log.info("生产随机加密密码：" + encodedPassword);
         //存储盐和加密后密码
         user.setSalt(salt);
         user.setPassword(encodedPassword);
         //插入用户
         // 上面exist已经判断是否存在用户并返回状态码，此处无需再次判断是否存在，add方法只用作注册使用
         userDao.save(user);
-        log.info("插入用户：" + user.getUsername() + " " + user.getPassword());
+        log.info("插入用户：" + user);
     
         return 1;
     }
@@ -119,4 +121,36 @@ public class UserService {
     }
     
     
+    public void editUser(User user) {
+        User userInDB = userDao.findByUsername(user.getUsername());
+        log.info("根据用户名：" + user.getUsername() + "，找到用户：" + userInDB);
+        userInDB.setName(user.getName());
+        userInDB.setPhone(user.getPhone());
+        userInDB.setEmail(user.getEmail());
+        userDao.save(userInDB);
+        log.info("存入用户：" + userInDB);
+        adminUserRoleService.saveRoleChanges(userInDB.getId(), user.getRoles());
+        log.info("赋予id为：" + userInDB.getId() + "的用户角色：" + user.getRoles());
+    }
+    
+    
+    public User resetPassword(User user) {
+        User userInDB = userDao.findByUsername(user.getUsername());
+        log.info("根据用户名：" + user.getUsername() + "，找到用户：" + userInDB);
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        log.info("生成随机盐:" + salt);
+        int times = 2;
+        userInDB.setSalt(salt);
+        log.info("设定盐：" + salt);
+        String encodedPassword = new SimpleHash("md5", "123", salt, times).toString();
+        log.info("生成随机加密密码:" + encodedPassword);
+        userInDB.setPassword(encodedPassword);
+        log.info("设定随机加密密码：" + encodedPassword);
+        log.info("存入用户：" + userInDB);
+        return userDao.save(userInDB);
+    }
+    
+    public void deleteById(int id) {
+        userDao.deleteById(id);
+    }
 }

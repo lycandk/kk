@@ -38,4 +38,16 @@ public class UserController {
         userService.updateUserStatus(requestUser);
         return ResultFactory.buildSuccessResult("用户状态更新成功");
     }
+    
+    @PutMapping("/api/admin/user")
+    public Result editUser(@RequestBody @Valid User requestUser) {
+        userService.editUser(requestUser);
+        return ResultFactory.buildSuccessResult("修改用户信息成功");
+    }
+    
+    @PutMapping("/api/admin/user/password")
+    public Result resetPassword(@RequestBody @Valid User requestUser) {
+        userService.resetPassword(requestUser);
+        return ResultFactory.buildSuccessResult("修改密码成功");
+    }
 }
