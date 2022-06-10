@@ -46,7 +46,7 @@ public class CatService {
      * @return
      */
     public Result getById(int id) {
-        log.info("根据id：" + id + " " + "查询cat:" + catDAO.findById(id));
+        log.info("根据id查询cat:" + catDAO.findById(id));
         return ResultFactory.buildSuccessResult(catDAO.findById(id));
     }
     

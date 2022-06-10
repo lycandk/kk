@@ -61,6 +61,7 @@ public class AdminPermissionService {
         for (AdminPermission adminPermission : adminPermissions) {
             //match prefix
             if (requestAPI.startsWith(adminPermission.getUrl())) {
+                log.info("requestAPI:" + requestAPI + "\nadminPermission.getUrl():" + adminPermission.getUrl());
                 return true;
             }
         }
@@ -87,7 +88,7 @@ public class AdminPermissionService {
         List<AdminPermission> adminPermissions = adminPermissionDao.findAllById(pids);
         
         Set<String> URLs = adminPermissions.stream().map(AdminPermission::getUrl).collect(Collectors.toSet());
-        
+        log.info("URLs:" + URLs);
         return URLs;
     }
 }

@@ -30,21 +30,18 @@ public class AdminRolePermissionService {
     
     @Transactional
     public void savePermChanges(int rid, List<AdminPermission> perms) {
-        log.warn("根据角色id:" + rid + "删除对应的功能权限");
         adminRolePermissionDao.deleteAllByRid(rid);
         List<AdminRolePermission> adminRolePermissions = new ArrayList<>();
         log.info("------遍历开始------");
         perms.forEach(p -> {
             AdminRolePermission adminRolePermission = new AdminRolePermission();
             adminRolePermission.setRid(rid);
-            log.info("对" + adminRolePermission + "设置角色id:" + rid);
             adminRolePermission.setPid(p.getId());
-            log.info("对" + adminRolePermission + "设置功能权限id:" + p.getId());
             adminRolePermissions.add(adminRolePermission);
             log.info("将" + adminRolePermission + "添加进adminRolePermissions列表");
         });
         log.info("------遍历结束------");
-        log.info("adminRolePermissions列表:" + adminRolePermissions);
+        log.info("汇总adminRolePermissions列表:" + adminRolePermissions);
         adminRolePermissionDao.saveAll(adminRolePermissions);
     }
 }

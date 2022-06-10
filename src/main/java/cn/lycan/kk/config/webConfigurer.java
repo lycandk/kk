@@ -1,10 +1,9 @@
 package cn.lycan.kk.config;
 
-import cn.lycan.kk.interceptor.LoginInterceptor;
+//import cn.lycan.kk.interceptor.LoginInterceptor;
+
 import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -30,18 +29,18 @@ public class webConfigurer implements WebMvcConfigurer {
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
                 .allowedHeaders("*");
     }
-    
-    @Bean
-    public LoginInterceptor getLoginInterceptor() {
-        return new LoginInterceptor();
-    }
-    
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/api/login").
-                excludePathPatterns("/api/logout").excludePathPatterns("/api/register").excludePathPatterns("/api/cats")
-                .excludePathPatterns("/api/varieties/{vid}/cats").excludePathPatterns("/api/search");
-    }
+
+//    @Bean
+//    public LoginInterceptor getLoginInterceptor() {
+//        return new LoginInterceptor();
+//    }
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/api/login").
+//                excludePathPatterns("/api/logout").excludePathPatterns("/api/register").excludePathPatterns("/api/cats")
+//                .excludePathPatterns("/api/varieties/{vid}/cats").excludePathPatterns("/api/search");
+//    }
     
     @Override
     /**

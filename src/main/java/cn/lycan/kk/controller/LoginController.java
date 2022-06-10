@@ -27,7 +27,7 @@ public class LoginController {
     @Autowired
     UserService userService;
     
-    @PostMapping("api/login")
+    @PostMapping("/api/login")
     public Result login(@RequestBody User user) {
         // 对 html 标签进行转义，防止 XSS 攻击
         String username = user.getUsername();
@@ -45,7 +45,7 @@ public class LoginController {
         }
     }
     
-    @PostMapping("api/register")
+    @PostMapping("/api/register")
     public Result register(@RequestBody User user) {
 //        String username = user.getUsername();
 //        String password = user.getPassword();
@@ -87,7 +87,7 @@ public class LoginController {
 //        return ResultFactory.buildSuccessResult(user);
     }
     
-    @GetMapping("api/logout")
+    @GetMapping("/api/logout")
     public Result logout() {
         Subject subject = SecurityUtils.getSubject();
         //logout方法由DelegatingSubject实现Subject接口后实现该方法，
@@ -102,7 +102,8 @@ public class LoginController {
      *
      * @return
      */
-    @GetMapping("api/authentication")
+    @CrossOrigin
+    @GetMapping("/api/authentication")
     public String authentication() {
         return "身份认证成功";
     }

@@ -38,20 +38,19 @@ public class UserService {
     
     public List<UserDTO> list() {
         List<User> users = userDao.findAll();
-        log.info("执行userDao.findAll()，获取数据库中所有用户:" + users);
         // Find all roles in DB to enable JPA persistence context.
         // List<AdminRole> allRoles = adminRoleService.findAll();
         
         List<UserDTO> userDTOS = users
                 .stream().map(user -> (UserDTO) new UserDTO().convertFrom(user)).collect(Collectors.toList());
-        log.info("执行convertFrom()方法，将users转换为userDTOS:" + userDTOS);
         
         userDTOS.forEach(u -> {
+            // 给查询的用户带上角色信息
             List<AdminRole> roles = adminRoleService.listRoleByUser(u.getUsername());
-            log.info("执行listRoleByUser()方法，根据username遍历获取用户对应的角色" + roles);
             u.setRoles(roles);
         });
         
+        log.info("获取userDTOS:" + userDTOS);
         return userDTOS;
     }
     
@@ -99,12 +98,10 @@ public class UserService {
         
         //生成随机16位盐
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
-        log.info("生成随机盐：" + salt);
         //hash迭代次数
         int times = 2;
         //MD5加密密码
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
-        log.info("生成随机加密密码：" + encodedPassword);
         //存储盐和加密后密码
         user.setSalt(salt);
         user.setPassword(encodedPassword);
@@ -118,38 +115,30 @@ public class UserService {
     
     public void updateUserStatus(User user) {
         User userInDB = userDao.findByUsername(user.getUsername());
-        log.info("根据用户名：" + user.getUsername() + "，找到用户：" + userInDB);
         userInDB.setEnabled(user.isEnabled());
-        log.info("使能用户：" + user.isEnabled());
+        log.info("对用户:" + userInDB + "使能：" + user.isEnabled());
         userDao.save(userInDB);
     }
     
     
     public void editUser(User user) {
         User userInDB = userDao.findByUsername(user.getUsername());
-        log.info("根据用户名：" + user.getUsername() + "，找到用户：" + userInDB);
         userInDB.setName(user.getName());
         userInDB.setPhone(user.getPhone());
         userInDB.setEmail(user.getEmail());
         userDao.save(userInDB);
-        log.info("存入用户：" + userInDB);
         adminUserRoleService.saveRoleChanges(userInDB.getId(), user.getRoles());
-        log.info("为id：" + userInDB.getId() + "的用户设置角色：" + user.getRoles());
+        log.info("存入用户：" + userInDB + "\n为id：" + userInDB.getId() + "的用户设置角色：" + user.getRoles());
     }
     
     
     public User resetPassword(User user) {
         User userInDB = userDao.findByUsername(user.getUsername());
-        log.info("根据用户名：" + user.getUsername() + "，找到用户：" + userInDB);
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
-        log.info("生成随机盐:" + salt);
         int times = 2;
         userInDB.setSalt(salt);
-        log.info("设定盐：" + salt);
         String encodedPassword = new SimpleHash("md5", "123", salt, times).toString();
-        log.info("生成随机加密密码:" + encodedPassword);
         userInDB.setPassword(encodedPassword);
-        log.info("设定随机加密密码：" + encodedPassword);
         log.info("存入用户：" + userInDB);
         return userDao.save(userInDB);
     }
