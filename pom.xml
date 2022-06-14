@@ -39,6 +39,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        <!-- redis 连接池 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
         <!--        //启用log4j2会导致日志系统冲突，多重绑定-->
         <!--        &lt;!&ndash; log4j2 &ndash;&gt;-->
         <!--        <dependency>-->

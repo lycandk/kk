@@ -3,8 +3,11 @@ package cn.lycan.kk.service;
 import cn.lycan.kk.dao.CatDAO;
 import cn.lycan.kk.entity.Cat;
 import cn.lycan.kk.entity.Variety;
+import cn.lycan.kk.redis.RedisService;
 import cn.lycan.kk.result.Result;
 import cn.lycan.kk.result.ResultFactory;
+import cn.lycan.kk.utils.CastUtils;
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -29,14 +32,31 @@ public class CatService {
     @Autowired
     private VarietyService varietyService;
     
+    @Autowired
+    RedisService redisService;
+    
     /**
      * 按照id排序查找所有Cat
      *
      * @return
      */
     public List<Cat> catList() {
-        log.info("按照id排序：" + sort + " " + "查找所有Cat:" + catDAO.findAll(sort));
-        return catDAO.findAll(sort);
+        List<Cat> cats;
+        String key = "catlist";
+        Object catCache = redisService.get(key);
+        
+        if (catCache == null) {
+            cats = catDAO.findAll(sort);
+            log.info("按照id排序：" + sort + " " + "查找所有Cat:" + JSON.parse(String.valueOf(cats)));
+            redisService.set(key, cats);
+        } else {
+            // 从缓存拿回来的是 Object ，我们需要编写一个方法把它转换为 List
+            cats = CastUtils.objectConvertToList(catCache, Cat.class);
+        }
+        return cats;
+
+
+//        return catDAO.findAll(sort);
     }
     
     /**
@@ -56,6 +76,7 @@ public class CatService {
      * @param cat
      */
     public void addOrUpdate(Cat cat) {
+        redisService.delete("catlist");
         log.info("存入id为：" + cat.getId() + "的cat：" + cat);
         catDAO.save(cat);
 //        if (null == getById(cat.getId())) {
@@ -68,6 +89,7 @@ public class CatService {
     }
     
     public void deleteById(int id) {
+        redisService.delete("catlist");
         log.info("删除id为：" + id + "的cat");
         catDAO.deleteById(id);
 //        if (null == getById(id)) {
