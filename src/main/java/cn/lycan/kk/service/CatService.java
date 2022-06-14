@@ -28,12 +28,11 @@ import java.util.List;
 public class CatService {
     Sort sort = Sort.by(Sort.DEFAULT_DIRECTION, "id");
     @Autowired
+    RedisService redisService;
+    @Autowired
     private CatDAO catDAO;
     @Autowired
     private VarietyService varietyService;
-    
-    @Autowired
-    RedisService redisService;
     
     /**
      * 按照id排序查找所有Cat
@@ -79,6 +78,12 @@ public class CatService {
         redisService.delete("catlist");
         log.info("存入id为：" + cat.getId() + "的cat：" + cat);
         catDAO.save(cat);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        redisService.delete("catlist");
 //        if (null == getById(cat.getId())) {
 //            log.info("插入新cat：" + cat);
 //            catMapper.add(cat);
@@ -92,6 +97,12 @@ public class CatService {
         redisService.delete("catlist");
         log.info("删除id为：" + id + "的cat");
         catDAO.deleteById(id);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        redisService.delete("catlist");
 //        if (null == getById(id)) {
 //            log.info("无法删除，找不到id为：" + id + "的cat");
 //        } else {
