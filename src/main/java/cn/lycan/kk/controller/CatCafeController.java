@@ -82,6 +82,7 @@ public class CatCafeController {
         try {
             file.transferTo(f);
             String imageUrl = "http://localhost:8443/api/file/" + f.getName();
+            log.info("获取到imageUrl:" + imageUrl);
             return imageUrl;
         } catch (IOException e) {
             e.printStackTrace();
