@@ -104,8 +104,8 @@ public class LoginController {
      */
     @CrossOrigin
     @GetMapping("/api/authentication")
-    public String authentication() {
-        return "身份认证成功";
+    public Result authentication() {
+        return ResultFactory.buildSuccessResult("身份认证成功");
     }
     
 }
