@@ -10,6 +10,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -74,10 +75,18 @@ public class ShiroConfiguration {
     }
     
     @Bean
+    public DefaultWebSessionManager defaultWebSessionManager() {
+        DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
+        defaultWebSessionManager.setGlobalSessionTimeout(3600000L);
+        return defaultWebSessionManager;
+    }
+    
+    @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         defaultWebSecurityManager.setRealm(getLCRealm());
         defaultWebSecurityManager.setRememberMeManager(rememberMeManager());
+        defaultWebSecurityManager.setSessionManager(defaultWebSessionManager());
         return defaultWebSecurityManager;
     }
     
